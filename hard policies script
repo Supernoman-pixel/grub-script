@@ -10,7 +10,7 @@ hash=$(echo -e "$password\n$password" | grub-mkpasswd-pbkdf2 | awk '/PBKDF2 hash
 #Put hash into /etc/grub.d/40_custom
 echo -e "\ncat << EOF\nset superusers=root\npassword_pbkdf2 root $hash\nEOF" >> /etc/grub.d/40_custom
 
-
+#FOR GRUB DEFAULT CONFIG
 
 echo '
 # If you change this file, run "update-grub" afterwards to update
@@ -21,7 +21,7 @@ GRUB_DEFAULT=0
 GRUB_TIMEOUT_STYLE=hidden
 GRUB_TIMEOUT=0
 GRUB_DISTRIBUTOR=`sb_release -i -s 2> /dev/null || echo Debian`
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pti=on module.sig_enforce=1 spectre_v2=on tsx = off slab_nomerge randomize_kstack_offset=on"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pti=on module.sig_enforce=1 spectre_v2=on tsx = off slab_nomerge randomize_kstack_offset=on pstore.disable=1"
 GRUB_CMDLINE_LINUX="find_preseed=/preseed.cfg auto noprompt priority=critical locale=en_US"
 
 # Uncomment to enable BadRAM filtering, modify to suit your needs
@@ -33,5 +33,77 @@ GRUB_CMDLINE_LINUX="find_preseed=/preseed.cfg auto noprompt priority=critical lo
 #GRUB_TERMINAL=console
 ' > /etc/default/grub
 
+#JOURNALD.CONF
+
+echo "[Journal]
+Storage=persistent
+Compress=yes
+Seal=yes
+SplitMode=uid
+ForwardToSyslog=yes
+ForwardToKMsg=no
+ForwardToConsole=no
+ForwardToWall=yes
+MaxLevelStore=info
+MaxLevelSyslog=notice
+MaxLevelKMsg=notice
+MaxLevelConsole=info
+MaxLevelWall=emerg
+LineMax=48K
+ReadKMsg=yes
+Audit=yes" > /etc/systemd/journald.conf
+
+#LOGIND.CONF
+
+echo "[Login]
+NAutoVTs=6
+ReserveVT=6
+KillUserProcesses=yes
+IdleAction=lock
+IdleActionSec=15min
+HandlePowerKey=poweroff
+HandleSuspendKey=ignore
+HandleHibernateKey=ignore
+HandleLidSwitch=suspend
+RemoveIPC=yes" > /etc/systemd/logind.conf
+
+#RESOLVED.CONF
+
+echo "[Resolve]
+DNS=1.1.1.1 8.8.8.8
+FallbackDNS=9.9.9.9
+Domains=example.com
+LLMNR=no
+MulticastDNS=no
+DNSSEC=allow-downgrade
+Cache=yes
+DNSStubListener=yes
+ReadEtcHosts=yes" > /etc/systemd/resolved.conf
+
+#SYSTEM.CONF
+
+echo "[Manager]
+LogLevel=info
+LogTarget=journal
+DumpCore=no
+NoNewPrivileges=yes
+DefaultCPUAccounting=yes
+DefaultMemoryAccounting=yes
+DefaultTasksAccounting=yes
+DefaultIOAccounting=no
+DefaultIPAccounting=no
+DefaultBlockIOAccounting=no
+CtrlAltDelBurstAction=none" > /etc/systemd/system.conf
+
+#41_CUSTOM
+
+echo "#!/bin/sh
+cat <<EOF
+if [ -f  \${config_directory}/custom.cfg ]; then
+  source \${config_directory}/custom.cfg
+elif [ -z "\${config_directory}" -a -f  \$prefix/custom.cfg ]; then
+  source \$prefix/custom.cfg
+fi
+EOF" > /etc/grub.d/41_custom
 
 update-grub
