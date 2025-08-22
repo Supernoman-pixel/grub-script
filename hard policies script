@@ -8,11 +8,14 @@ echo
 hash=$(echo -e "$password\n$password" | grub-mkpasswd-pbkdf2 | awk '/PBKDF2 hash of your password is/ {print $NF}')
 
 #Put hash into /etc/grub.d/40_custom
-echo -e "\ncat << EOF\nset superusers=root\npassword_pbkdf2 root $hash\nEOF" >> /etc/grub.d/40_custom
+cat <<EOF >> /etc/grub.d/40_custom
+set superusers=root
+password_pbkdf2 root $hash
+EOF
 
 #FOR GRUB DEFAULT CONFIG
 
-echo '
+cat <<EOF > /etc/default/grub
 # If you change this file, run "update-grub" afterwards to update
 # /boot/grub/grub.cfg.
 # For full documentation of the options in this file, see:
@@ -20,18 +23,16 @@ echo '
 GRUB_DEFAULT=0
 GRUB_TIMEOUT_STYLE=hidden
 GRUB_TIMEOUT=0
-GRUB_DISTRIBUTOR=`sb_release -i -s 2> /dev/null || echo Debian`
-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pti=on module.sig_enforce=1 spectre_v2=on tsx = off slab_nomerge randomize_kstack_offset=on pstore.disable=1"
+GRUB_DISTRIBUTOR=$(lsb_release -i -s 2> /dev/null || echo Debian)
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pti=on module.sig_enforce=1 spectre_v2=on tsx=off slab_nomerge randomize_kstack_offset=on pstore.disable=1"
 GRUB_CMDLINE_LINUX="find_preseed=/preseed.cfg auto noprompt priority=critical locale=en_US"
 
 # Uncomment to enable BadRAM filtering, modify to suit your needs
-# This works with Linux (no patch required) and with any kernel that obtains
-# the memory map information from GRUB (GNU Mach, kernel of FreeBSD ...)
 #GRUB_BADRAM=0x01234567,0xfefefefe,0x89abcdef,0xefefefef
 
 # Uncomment to disable graphical terminal (grub-pc only)
 #GRUB_TERMINAL=console
-' > /etc/default/grub
+EOF
 
 #JOURNALD.CONF
 
@@ -94,5 +95,3 @@ DefaultIOAccounting=no
 DefaultIPAccounting=no
 DefaultBlockIOAccounting=no
 CtrlAltDelBurstAction=none" > /etc/systemd/system.conf
-
-update-grub
