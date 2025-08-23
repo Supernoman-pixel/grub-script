@@ -15,7 +15,7 @@ EOF
 
 #FOR GRUB DEFAULT CONFIG
 
-cat <<EOF > /etc/default/grub
+echo '
 # If you change this file, run "update-grub" afterwards to update
 # /boot/grub/grub.cfg.
 # For full documentation of the options in this file, see:
@@ -31,8 +31,7 @@ GRUB_CMDLINE_LINUX="find_preseed=/preseed.cfg auto noprompt priority=critical lo
 #GRUB_BADRAM=0x01234567,0xfefefefe,0x89abcdef,0xefefefef
 
 # Uncomment to disable graphical terminal (grub-pc only)
-#GRUB_TERMINAL=console
-EOF
+#GRUB_TERMINAL=console' > /etc/default/grub
 
 #JOURNALD.CONF
 
