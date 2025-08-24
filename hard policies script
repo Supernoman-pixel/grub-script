@@ -13,6 +13,8 @@ set superusers=root
 password_pbkdf2 root $hash
 EOF
 
+update-grub
+
 #FOR GRUB DEFAULT CONFIG
 
 echo '
