@@ -295,6 +295,7 @@ install ax25 /bin/true
 install x25 /bin/true
 install lapb /bin/true
 install decnet /bin/true
+install gfs2 /bin/true
 
 # ------------------------------
 # USB storage (optional if not used)
