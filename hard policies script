@@ -234,3 +234,74 @@ echo "# Login access control table.
 #-:ALL:ALL" > /etc/security/access.conf
 
 update-grub
+
+
+
+#MORE HARD POLICIES
+touch /etc/modprobe.d/hardening.conf
+echo "# ------------------------------
+# Filesystem modules to disable
+# ------------------------------
+install cramfs /bin/true
+install freevxfs /bin/true
+install jffs2 /bin/true
+install hfs /bin/true
+install hfsplus /bin/true
+install squashfs /bin/true
+install udf /bin/true
+install vfat /bin/true
+install msdos /bin/true
+install iso9660 /bin/true
+install befs /bin/true
+install bfs /bin/true
+install efs /bin/true
+install hpfs /bin/true
+install jfs /bin/true
+install minix /bin/true
+install qnx4 /bin/true
+install qnx6 /bin/true
+install sysv /bin/true
+install ufs /bin/true
+
+# ------------------------------
+# Network protocols to disable
+# ------------------------------
+install dccp /bin/true
+install dccp_ipv4 /bin/true
+install dccp_ipv6 /bin/true
+install sctp /bin/true
+install sctp_diag /bin/true
+install tipc /bin/true
+install rds /bin/true
+
+# ------------------------------
+# Bluetooth modules to disable
+# ------------------------------
+install bluetooth /bin/true
+install btusb /bin/true
+install bnep /bin/true
+install rfcomm /bin/true
+install hci_uart /bin/true
+install appletalk /bin/true
+
+# ------------------------------
+# Legacy / obsolete network protocols
+# ------------------------------
+install appletalk /bin/true
+install ns /bin/true
+install ddp /bin/true
+install ipx /bin/true
+install ax25 /bin/true
+install x25 /bin/true
+install lapb /bin/true
+install decnet /bin/true
+
+# ------------------------------
+# USB storage (optional if not used)
+# ------------------------------
+install usb_storage /bin/true
+install uas /bin/true" > /etc/modprobe.d/hardening.conf
+
+
+
+
