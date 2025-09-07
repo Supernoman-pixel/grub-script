@@ -296,6 +296,8 @@ install x25 /bin/true
 install lapb /bin/true
 install decnet /bin/true
 install gfs2 /bin/true
+install msdos /bin/true
+install umsdos /bin/true
 
 # ------------------------------
 # USB storage (optional if not used)
