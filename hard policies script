@@ -13,8 +13,6 @@ set superusers=root
 password_pbkdf2 root $hash
 EOF
 
-update-grub
-
 #FOR GRUB DEFAULT CONFIG
 
 echo '
@@ -234,3 +232,5 @@ echo "# Login access control table.
 #
 # All other users should be denied to get access from all sources.
 #-:ALL:ALL" > /etc/security/access.conf
+
+update-grub
